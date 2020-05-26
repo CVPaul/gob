@@ -64,9 +64,11 @@ void gob::MultiThreadLoop::exit() {
         delete m_pool[i];
         m_pool[i] = nullptr;
     }
+/* time record code block
 #include <boost/date_time/posix_time/posix_time.hpp>
 #include <boost/date_time/posix_time/posix_time_io.hpp>
 namespace dt = boost::posix_time;
     dt::ptime t = dt::microsec_clock::local_time();	
     logger_info << m_strThreadName << " stopped at " << dt::to_iso_extended_string(t);
+*/
 }

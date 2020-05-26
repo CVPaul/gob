@@ -1,24 +1,24 @@
 #include "gob/log/logging.h"
-#include "gob/event/event_thread.h"
+#include "gob/event/event_single_thread.h"
 
-gob::EventThread::EventThread(const std::string& thread_name) {
+gob::EventSingleThread::EventSingleThread(const std::string& thread_name) {
 	m_strThreadName = thread_name;
 	m_bStopped = false;
 	m_pThread = nullptr;
 }
 
-gob::EventThread::~EventThread() {
+gob::EventSingleThread::~EventSingleThread() {
 	exit();
 }
 
-bool gob::EventThread::start() {
+bool gob::EventSingleThread::start() {
 	if (!m_pThread)
-		m_pThread = new std::thread(&EventThread::run, this);
+		m_pThread = new std::thread(&EventSingleThread::run, this);
 	return true;
 }
 
-void gob::EventThread::run() {
-	logger_info << "EventThread: " << m_strThreadName << " started!";
+void gob::EventSingleThread::run() {
+	logger_info << "EventSingleThread: " << m_strThreadName << " started!";
 	while (!m_bStopped) {
 		FunctionPointer func;
 		{// Wait for a message to be added to the queue
@@ -34,7 +34,7 @@ void gob::EventThread::run() {
 	}
 }
 
-int32_t gob::EventThread::post(FunctionPointer func) {
+int32_t gob::EventSingleThread::post(FunctionPointer func) {
 	if (!m_pThread)
 		return 1;
 	if (m_bStopped) // 停止时不允许插入事件
@@ -45,21 +45,23 @@ int32_t gob::EventThread::post(FunctionPointer func) {
 	return 0;
 }
 
-void gob::EventThread::stop() {
+void gob::EventSingleThread::stop() {
 	m_bStopped = true; 
 }
 
-void gob::EventThread::exit() {
+void gob::EventSingleThread::exit() {
 	if (!m_pThread)
 		return;
 	// 调用私有的stop函数去停止循环
-	post(std::bind(&EventThread::stop, this));
+	post(std::bind(&EventSingleThread::stop, this));
 	m_pThread->join();
 	delete m_pThread;
 	m_pThread = nullptr;
+/* time record code block
 #include <boost/date_time/posix_time/posix_time.hpp>
 #include <boost/date_time/posix_time/posix_time_io.hpp>
 namespace dt = boost::posix_time;
     dt::ptime t = dt::microsec_clock::local_time();	
     logger_info << m_strThreadName << " stopped at " << dt::to_iso_extended_string(t);
+*/
 }

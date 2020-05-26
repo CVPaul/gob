@@ -10,7 +10,7 @@
 */
 #include <vector>
 #include <functional>
-
+#include "common/constant.h"
 #define BOOST_ASIO_NO_DEPRECATED
 #include <boost/asio.hpp>
 #include <boost/bind.hpp>
@@ -29,7 +29,7 @@ namespace gob {
             // 所以这里设置为核数的2倍
             bool bStrand, // 是否使用strand来解决竞态条件(race condition)
             const std::string& thread_name="",
-            std::size_t pool_size = std::thread::hardware_concurrency());
+            std::size_t pool_size = MT_CONCURRENCY_CNT);
 		~EventMultiThread();
 		bool start();
 		int32_t post(FunctionPointer func, bool dispatch = false);

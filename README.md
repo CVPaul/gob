@@ -8,6 +8,12 @@
 - this is the first member of `gob` and I had upload to [git](https://github.com/CVPaul/logger) at an early time, and since I am Chinese so the `README.md` was also write in Chinese at that time
 - In short, this module is an out-of-the-box boost-based log library
 
+#### New Features
+- last days I compared my lib with `glog`(google logger library) and found that `glog` is faster than this one in `sync-mode` and about the same with this one in `async-mode`,
+on the other hand `glog` is much lighter than `boost` so I decided to include `glog` in my project
+- if `USING_GLOG` marco is define then this lib will using `glog` as basic, more detail can be found in `CMakeLists.txt`
+- rolling feature was also implemented
+
 ### Module: `event`
 - this is a C++ implement of `Producer/Consumer Model` and it has following submodules
     - `event_thread`: a multi producer one consumer model in pure C++

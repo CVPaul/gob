@@ -9,13 +9,15 @@
 #include <functional>
 #include <condition_variable> 
 
+#include "common/constant.h"
+
 namespace gob {
 	typedef std::function<void(void)> FunctionPointer;
 	class MultiThreadLoop {
 		// 一个线程处理所有的事件
 	public:
 		MultiThreadLoop(const std::string& thread_name,
-            std::size_t pool_size = std::thread::hardware_concurrency());
+            std::size_t pool_size = MT_CONCURRENCY_CNT);
 		~MultiThreadLoop();
 		bool start();
 		int32_t post(FunctionPointer func);
